@@ -290,3 +290,31 @@ breaking memoization for the inner cell rows. **Fix:** wrapped in `useMemo`.
 
 No P0 / P1 found. Two P2 polish fixes shipped (R2-D5b, R2-D-perf). Gates remain
 clean (57/57 tests, tsc clean, eslint clean). Ready for Round 3.
+
+---
+
+## Round 3 — final audit pass (Android live)
+
+After Round 2 fixes were committed (f12c1a7), a third audit pass walked the
+following risk paths:
+
+| risk | result |
+|------|--------|
+| `findTurningPoint` indexes outside `probHistory` if turning.ply not present | ✅ derived from same array — safe |
+| `ProbChart` width hard-coded at 320 — overflow on narrow phones | ✅ inside `ScrollView`; verified fits on 412dp Pixel emulator |
+| `searchHardMoveAsync` alpha-beta correctness at root | ✅ root only updates `alpha`; never cuts on beta because beta stays Infinity at root (correct) |
+| Monte Carlo greedy-bias in `pickGreedyRandom` (always takes immediate win/block) | ✅ as designed: heuristic raises rollout strength, tests confirm sum-to-1 + correct on terminal positions |
+| `runAiIfNeeded` double-fire on rapid `setMode(vs-computer)` toggle | minor: no abort on existing AI before re-fire, but `isThinking` early-return inside `runAiIfNeeded` makes the second call a no-op |
+| `newGame` does not seed `probHistory[0]` | acceptable: chart shows "Play a move to see analysis." then first move triggers `recomputeProb` |
+| 3D projection centering (post R2 fix) | ✅ verified on Android — cloud now occupies canvas symmetrically |
+| Persistence: state survives `am force-stop` + relaunch | ✅ board + history + chart + turning-point + mode + AI level all restored |
+| All four views render shared state correctly | ✅ verified by screenshot in Grid → Slices → 3D → Heat sequence |
+| VoiceOver labels match spec `"x# y# z# w#, (empty|X|O)"` | ✅ across Grid, Slices, 3D, Heat (tests + grep) |
+
+### Round 3 conclusion
+
+**Zero P0, zero P1, zero P2.** All four views work end-to-end on Android.
+iOS rendering verified (behind a system notification dialog that blocked
+synthetic taps but did not obscure the rendered UI). Gates remain clean.
+
+Stopping condition met: an audit round produced zero P0/P1.
