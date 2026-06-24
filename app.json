@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0b0e14"
+        "backgroundColor": "#28A745"
       },
       "package": "com.raban.lattttice",
       "versionCode": 1

@@ -21,7 +21,7 @@ website:
   back-to-top-navigation: true
   navbar:
     pinned: true
-    logo: assets/etabli-logo.svg
+    logo: assets/icon-lattttice.svg
     logo-href: index.html
     title: false
     right:
