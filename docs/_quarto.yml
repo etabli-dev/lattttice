@@ -25,10 +25,41 @@ website:
     logo-href: index.html
     title: false
     right:
+      - text: "EN"
+        href: en/index.qmd
+      - text: "FR"
+        href: fr/index.qmd
+      - text: "DE"
+        href: de/index.qmd
       - text: "Download v0.1.0 (APK)"
         href: "https://github.com/etabli-dev/etabli-lattttice/releases/tag/v0.1.0"
       - icon: github
         href: "https://github.com/etabli-dev/etabli-lattttice"
+  sidebar:
+    - id: en
+      title: "établi lattttice"
+      style: floating
+      contents:
+        - section: "In English"
+          contents:
+            - text: "Walkthrough"
+              href: en/index.qmd
+    - id: fr
+      title: "établi lattttice"
+      style: floating
+      contents:
+        - section: "En français"
+          contents:
+            - text: "Visite guidée"
+              href: fr/index.qmd
+    - id: de
+      title: "établi lattttice"
+      style: floating
+      contents:
+        - section: "Auf Deutsch"
+          contents:
+            - text: "Rundgang"
+              href: de/index.qmd
   page-footer:
     left: "Apache-2.0 · © 2026 R. Heller"
     right:

@@ -1,0 +1,119 @@
+---
+title: "établi lattttice"
+sidebar: de
+toc: true
+toc-depth: 2
+---
+
+
+> **lattttice** ist vierdimensionales Tic-Tac-Toe auf einem 4×4×4×4-Brett:
+> 256 Felder, 4 in einer Reihe zum Sieg, entlang einer beliebigen Linie durch
+> vier Dimensionen. Da kein Bildschirm 4D ist, bietet lattttice vier Möglichkeiten,
+> dieselbe Stellung zu *sehen* — ein Raster aus Rastern, Achsenschnitte, eine
+> Schlegel-Projektion in 3D und eine Stärke-Heatmap — dazu eine Live-Analyse der
+> Gewinnwahrscheinlichkeit und einen KI-Gegner.
+> Es richtet sich an Rätsel- und Strategiespieler, die Tic-Tac-Toe in einer
+> absurden, schönen Zuspitzung erleben wollen.
+>
+> **Stack:** Expo (React Native) + TypeScript, Zustand für den Zustand,
+> react-native-skia-Diagramme, expo-gl für die 3D-Projektion. Teil der
+> **établi**-Suite. Jede Abbildung ist ein echter Screenshot des Release-Builds
+> v0.1.0 auf einem Android-Emulator, regeneriert durch `scripts/capture.sh`.
+
+## Inhaltsverzeichnis
+1. [Schnellstart](#quick-start)
+2. [Raster aus Rastern](#feature-grid-of-grids)
+3. [Züge spielen](#feature-playing-moves)
+4. [Ansicht Schnitte](#feature-slices-view)
+5. [Schlegel-Projektion in 3D](#feature-3d-schlegel-projection)
+6. [Ansicht Heatmap](#feature-heat-view)
+7. [Analyse der Gewinnwahrscheinlichkeit](#feature-win-probability-analysis)
+8. [Modi, Schwierigkeit und Zurücksetzen](#feature-modes-difficulty--reset)
+9. [Schaukasten / Galerie](#showcase--gallery)
+10. [Diese Abbildungen reproduzieren](#reproducing-these-figures)
+11. [Bekannte Lücken](#known-gaps)
+12. [Version](#version)
+
+## Schnellstart
+1. Installieren Sie die APK v0.1.0 (`lattttice-0.1.0.apk`) und öffnen Sie sie. Beim Kaltstart erscheint ein leeres 4×4×4×4-Brett in der Ansicht **Raster**, „X am Zug“.
+
+   ![Startbildschirm — das leere 4D-Brett als Raster aus Rastern](../assets/0.1.0/01-home-grid.png)
+
+2. Vier Tabs ändern die Art, wie Sie das Brett *sehen*: **Raster · Schnitte · 3D · Heatmap**. Dieselbe Stellung wird in jeder Ansicht gezeigt.
+
+## Funktion: Raster aus Rastern
+Die Standardansicht legt den Hyperwürfel als 4×4-Anordnung von 4×4-Brettern aus. Jedes Teilbrett ist mit `z·w` beschriftet (die beiden „äußeren“ Dimensionen); darin sehen Sie das 4×4 der x,y-Felder. Alle 256 Felder sind auf einen Blick sichtbar.
+
+![Ansicht Raster — 16 Teilbretter, beschriftet z0·w0 … z3·w3](../assets/0.1.0/01-home-grid.png)
+
+## Funktion: Züge spielen
+Tippen Sie auf ein beliebiges leeres Feld, um den Stein der am Zug befindlichen Seite zu setzen. X ist blau, O ist bernsteinfarben. Die Kopfzeile wechselt zum nächsten Spieler, und die Analyse beginnt mit der Neuberechnung („analysiere…“).
+
+![Einige Züge auf verschiedenen Teilbrettern gesetzt](../assets/0.1.0/02-moves-grid.png)
+
+## Funktion: Ansicht Schnitte
+**Schnitte** isoliert jeweils eine `w`-Schicht (ein `w =`-Selektor oben) und zeigt deren vier `z`-Bretter größer an — so lässt sich eine einzelne 3D-Platte des 4D-Raums leichter lesen.
+
+![Ansicht Schnitte — der w-Selektor und der z0-Schnitt mit einem Stein](../assets/0.1.0/03-slices.png)
+
+## Funktion: Schlegel-Projektion in 3D
+**3D** rendert eine schreibgeschützte Schlegel-Projektion des Hyperwürfels — alle 256 Felder als tiefenschattierte Punktwolke, wobei Ihre Steine in 3D positioniert sind, sodass Sie Linien erkennen, die quer durch die Dimensionen verlaufen. (Gespielt wird weiterhin aus den 2D-Ansichten; diese dient der räumlichen Intuition.)
+
+![Schlegel-Projektion des 4D-Bretts in 3D](../assets/0.1.0/04-projection3d.png)
+
+## Funktion: Ansicht Heatmap
+**Heatmap** schattiert jedes leere Feld nach der Zugstärke für die am Zug befindliche Seite auf einer Viridis-Skala (die Legende zeigt den Wertebereich). Helle Felder sind die starken Züge; so wird aus dem 256-Felder-Brett eine lesbare Druckkarte.
+
+![Ansicht Heatmap — jedes leere Feld nach Stärke schattiert](../assets/0.1.0/05-heat.png)
+
+## Funktion: Analyse der Gewinnwahrscheinlichkeit
+Unter dem Brett zeichnet ein react-native-skia-Diagramm P(X) / P(O) / P(Remis) über die Partie hinweg und hebt den **Wendepunkt** hervor (den Halbzug mit dem größten Ausschlag). Es aktualisiert sich, während Sie spielen.
+
+![Analyse — Diagramm der Gewinnwahrscheinlichkeit und Wendepunkt](../assets/0.1.0/06-analysis-settings.png)
+
+## Funktion: Modi, Schwierigkeit und Zurücksetzen
+Die Einstellungen liegen unter der Analyse: **Modus** (Hotseat / gegen Computer), und wenn „gegen Computer“ gewählt ist, eine **KI-Schwierigkeit** (Leicht / Mittel / Schwer). Pro Spieler lassen sich **Stärkehinweis**-Overlays ein- und ausschalten, und **Neues Spiel** leert das Brett.
+
+![Modus gegen Computer mit KI-Schwierigkeit](../assets/0.1.0/07-vs-computer.png)
+
+Das Zurücksetzen führt zu einem frischen, leeren Brett:
+
+![Frisches Brett nach Neues Spiel](../assets/0.1.0/08-reset.png)
+
+## Schaukasten / Galerie
+| | | |
+|---|---|---|
+| ![](../assets/0.1.0/01-home-grid.png) | ![](../assets/0.1.0/03-slices.png) | ![](../assets/0.1.0/04-projection3d.png) |
+| Raster aus Rastern | Schnitte | 3D-Projektion |
+| ![](../assets/0.1.0/05-heat.png) | ![](../assets/0.1.0/06-analysis-settings.png) | ![](../assets/0.1.0/07-vs-computer.png) |
+| Heatmap | Analyse | gegen Computer |
+
+## Diese Abbildungen reproduzieren
+```bash
+# 1. Release-APK auf einem gestarteten Emulator/Gerät bauen + installieren
+npx expo run:android --variant release
+# 2. jede Abbildung nach vignettes/../assets/0.1.0/ regenerieren
+bash scripts/capture.sh
+```
+Geräteeinstellungen für deterministische Aufnahmen: 1080×2400 @ 420 dpi,
+Animationen deaktiviert. Die 3D-Ansicht wird per GL gerendert; das Harness gewährt
+ihr vor der Aufnahme zusätzliche Zeit zum Stabilisieren. Die Slugs in
+`scripts/capture.sh` entsprechen 1:1 den obigen Dateinamen.
+
+> **Build-Hinweis:** Der Release-Build benötigt einen größeren Gradle-Heap als die
+> Expo-Standardeinstellung (`org.gradle.jvmargs=-Xmx6144m` in
+> `android/gradle.properties`), bedingt durch den nativen Abhängigkeitssatz
+> (skia + gl + reanimated + screens). Der Standard-Heap von 2 GB läuft bei
+> `:app:collectReleaseDependencies` über (OOM).
+
+## Bekannte Lücken
+- **Gewinnlinie / Sieg-Banner:** für v0.1.0 nicht aufgenommen. Das Erzwingen eines
+  bestimmten 4-in-einer-Reihe durch die 4D mittels skriptgesteuerter blinder Tipps
+  ist unzuverlässig; dieser Zustand ist im Spiel erreichbar, wurde aber als
+  dokumentierte Lücke belassen statt vorgetäuscht. Ein eingespeister Hook für eine
+  „gewonnene Stellung“ würde es dem Harness ermöglichen, ihn deterministisch
+  aufzunehmen (geplant).
+
+## Version
+Dokumentiert établi **lattttice v0.1.0** (applicationId `com.raban.lattttice`,
+versionCode 1). Teil der établi-Suite (Werkbank).

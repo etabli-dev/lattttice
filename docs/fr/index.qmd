@@ -1,0 +1,118 @@
+---
+title: "établi lattttice"
+sidebar: fr
+toc: true
+toc-depth: 2
+---
+
+
+> **lattttice**, c'est le morpion en quatre dimensions sur un plateau 4×4×4×4 :
+> 256 cases, 4 alignées pour gagner, le long de n'importe quelle ligne traversant
+> les quatre dimensions. Comme aucun écran n'est en 4D, lattttice vous offre quatre
+> façons de *voir* la même position — une grille de grilles, des tranches par axe,
+> une projection de Schlegel en 3D et une carte de chaleur de force — auxquelles
+> s'ajoutent une analyse en direct de la probabilité de victoire et un adversaire IA.
+> Il s'adresse aux amateurs de casse-tête et de stratégie abstraite qui veulent voir
+> le morpion poussé jusqu'à un extrême absurde et magnifique.
+>
+> **Stack :** Expo (React Native) + TypeScript, état Zustand, graphiques
+> react-native-skia, expo-gl pour la projection 3D. Fait partie de la suite **établi**.
+> Chaque figure est une véritable capture d'écran de la version de production v0.1.0
+> sur un émulateur Android, régénérée par `scripts/capture.sh`.
+
+## Table des matières
+1. [Démarrage rapide](#quick-start)
+2. [Grille de grilles](#feature-grid-of-grids)
+3. [Jouer des coups](#feature-playing-moves)
+4. [Vue Tranches](#feature-slices-view)
+5. [Projection de Schlegel en 3D](#feature-3d-schlegel-projection)
+6. [Vue Chaleur](#feature-heat-view)
+7. [Analyse de la probabilité de victoire](#feature-win-probability-analysis)
+8. [Modes, difficulté et réinitialisation](#feature-modes-difficulty--reset)
+9. [Vitrine / galerie](#showcase--gallery)
+10. [Reproduire ces figures](#reproducing-these-figures)
+11. [Limites connues](#known-gaps)
+12. [Version](#version)
+
+## Démarrage rapide
+1. Installez l'APK v0.1.0 (`lattttice-0.1.0.apk`) et ouvrez-le. Au démarrage à froid, il affiche un plateau 4×4×4×4 vide dans la vue **Grille**, « X au trait ».
+
+   ![Accueil — le plateau 4D vide sous forme de grille de grilles](../assets/0.1.0/01-home-grid.png)
+
+2. Quatre onglets changent la façon de *voir* le plateau : **Grille · Tranches · 3D · Chaleur**. La même position est présentée dans chacun.
+
+## Fonctionnalité : Grille de grilles
+La vue par défaut dispose l'hypercube sous la forme d'un agencement 4×4 de plateaux 4×4. Chaque sous-plateau est étiqueté `z·w` (les deux dimensions « extérieures ») ; à l'intérieur, vous voyez le 4×4 des cases x,y. Les 256 cases sont visibles d'un seul coup d'œil.
+
+![Vue Grille — 16 sous-plateaux étiquetés z0·w0 … z3·w3](../assets/0.1.0/01-home-grid.png)
+
+## Fonctionnalité : Jouer des coups
+Touchez n'importe quelle case vide pour y déposer le pion du joueur au trait. X est bleu, O est ambre. L'en-tête bascule sur le joueur suivant et l'analyse commence à se recalculer (« analyse en cours… »).
+
+![Quelques coups placés sur différents sous-plateaux](../assets/0.1.0/02-moves-grid.png)
+
+## Fonctionnalité : Vue Tranches
+**Tranches** isole une couche `w` à la fois (un sélecteur `w =` en haut) et affiche en plus grand ses quatre plateaux `z` — il est plus facile de lire une seule dalle 3D de l'espace 4D.
+
+![Vue Tranches — le sélecteur w et la tranche z0 avec un pion](../assets/0.1.0/03-slices.png)
+
+## Fonctionnalité : Projection de Schlegel en 3D
+**3D** rend une projection de Schlegel en lecture seule de l'hypercube — les 256 cases sous forme d'un nuage de points ombré en profondeur, vos pions étant positionnés en 3D pour que vous puissiez voir les lignes qui traversent les dimensions. (Vous jouez toujours depuis les vues 2D ; celle-ci sert à l'intuition spatiale.)
+
+![Projection de Schlegel en 3D du plateau 4D](../assets/0.1.0/04-projection3d.png)
+
+## Fonctionnalité : Vue Chaleur
+**Chaleur** ombre chaque case vide selon la force du coup pour le joueur au trait, sur une échelle viridis (la légende indique la plage de valeurs). Les cases vives sont les coups forts ; cela transforme le plateau de 256 cases en une carte de pression lisible.
+
+![Vue Chaleur — chaque case vide ombrée selon sa force](../assets/0.1.0/05-heat.png)
+
+## Fonctionnalité : Analyse de la probabilité de victoire
+Sous le plateau, un graphique react-native-skia trace P(X) / P(O) / P(nul) au fil de la partie et met en évidence le **point de bascule** (le demi-coup au plus grand renversement). Il se met à jour au fur et à mesure que vous jouez.
+
+![Analyse — graphique de probabilité de victoire et point de bascule](../assets/0.1.0/06-analysis-settings.png)
+
+## Fonctionnalité : Modes, difficulté et réinitialisation
+Les réglages se trouvent sous l'analyse : **Mode** (Local / contre l'Ordinateur), et lorsque « contre l'Ordinateur » est sélectionné, une **difficulté de l'IA** (Facile / Moyen / Difficile). Des surcouches d'**indice de force** par joueur peuvent être activées, et **Nouvelle partie** vide le plateau.
+
+![Mode contre l'Ordinateur avec difficulté de l'IA](../assets/0.1.0/07-vs-computer.png)
+
+La réinitialisation ramène à un plateau neuf et vide :
+
+![Plateau neuf après Nouvelle partie](../assets/0.1.0/08-reset.png)
+
+## Vitrine / galerie
+| | | |
+|---|---|---|
+| ![](../assets/0.1.0/01-home-grid.png) | ![](../assets/0.1.0/03-slices.png) | ![](../assets/0.1.0/04-projection3d.png) |
+| grille de grilles | tranches | projection 3D |
+| ![](../assets/0.1.0/05-heat.png) | ![](../assets/0.1.0/06-analysis-settings.png) | ![](../assets/0.1.0/07-vs-computer.png) |
+| carte de chaleur | analyse | contre l'ordinateur |
+
+## Reproduire ces figures
+```bash
+# 1. compiler + installer l'APK de production sur un émulateur/appareil démarré
+npx expo run:android --variant release
+# 2. régénérer chaque figure dans vignettes/../assets/0.1.0/
+bash scripts/capture.sh
+```
+Réglages de l'appareil pour une capture déterministe : 1080×2400 @ 420 ppp,
+animations désactivées. La vue 3D est rendue par GL ; le harnais lui accorde un
+délai de stabilisation supplémentaire avant la capture. Les slugs de
+`scripts/capture.sh` correspondent 1:1 aux noms de fichiers ci-dessus.
+
+> **Note de compilation :** la version de production nécessite un tas Gradle plus
+> grand que la valeur par défaut d'Expo (`org.gradle.jvmargs=-Xmx6144m` dans
+> `android/gradle.properties`) en raison de l'ensemble des dépendances natives
+> (skia + gl + reanimated + screens). Le tas par défaut de 2 Go provoque une
+> erreur de mémoire à `:app:collectReleaseDependencies`.
+
+## Limites connues
+- **Ligne gagnante / bannière de victoire :** non capturées pour la v0.1.0.
+  Forcer un alignement précis de 4 à travers la 4D au moyen de touchers à l'aveugle
+  scriptés n'est pas fiable ; cet état est atteignable en jeu, mais il a été laissé
+  comme limite documentée plutôt que simulé. Un point d'ancrage « position gagnée »
+  ensemencé permettrait au harnais de le capturer de façon déterministe (prévu).
+
+## Version
+Documente établi **lattttice v0.1.0** (applicationId `com.raban.lattttice`,
+versionCode 1). Fait partie de la suite établi (établi).
